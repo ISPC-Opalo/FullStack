@@ -1,23 +1,97 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/sN4by2UL)
-![Logo de la Institución ISPC](assets/CaratulaEM.png)
+![Logo de la Institución ISPC](E%20assets/caratula.png)
 
-# Electronica Microcontrolada
+# Módulo Programador FullStack IoT
+## Tecnicatura Superior en Telecomunicaciones – Segundo Año
 
-## Proyecto de la Unidad #1: Implementación de Alarmas
+### 🔹 Presentación General  
 
-Semana 1: Alarmas con circuitos básicos eléctricos.
-Presentacion del primer proyecto grupal correspondiente a la materia de Electroinca microcontrolada, bajo las siguiente consignas:
-1. Estudio de los componentes básicos de un circuito eléctrico.
-2. Diseño y construcción de un circuito simple de alarma utilizando un
-interruptor, una batería y un buzzer.
-3. Documentación del diseño en el repositorio del equipo en GitHub.
+El módulo Programador FullStack IoT es un espacio interdisciplinario que integra las materias Arquitectura y Conectividad, Sistemas de Control y Servicios y Plataformas, orientado al diseño e implementación de soluciones IoT aplicadas a la industria.
+Durante 10 semanas, los estudiantes trabajarán en equipos de 3 a 5 integrantes, desarrollando un proyecto técnico completo que abarque sensado, conectividad, automatización, visualización de datos y documentación profesional.
+El trabajo se organiza bajo el enfoque de Aprendizaje Basado en Proyectos (ABP), con metodología Scrum: tres sprints, entregas semanales y seguimiento por parte de los docentes de cada materia. El desarrollo debe gestionarse en GitHub y documentarse en cada etapa.
+### 🔹 Selección del Proyecto  
 
-Semana 2-3:Incorporación de circuitos electrónicos
-analógicos (OPA).
-1. Introducción a los amplificadores operacionales y su funcionamiento.
-2. Implementación de un circuito de alarma que reaccione a cambios de
-luz o temperatura usando OPA.
-3. Pruebas y ajustes del circuito. Documentación del proceso.
+Cada equipo debe elegir un proyecto de base a desarrollar, seleccionando una problemática dentro de una de las siguientes 10 áreas industriales:  
+
+* Gestión Energética
+
++ Monitoreo Ambiental
+
++ Trazabilidad de Producción y Logística
+
++ Mantenimiento Predictivo
+
++ Seguridad Industrial
+
++ Monitoreo de Infraestructura
+
++ Agricultura Inteligente (AgTech)
+
++ Control de Inventario
+
++ Gestión de Recursos Hídricos
+
++ Control de Calidad en Producción
+
+🗂️ Podés acceder a la descripción detallada de cada proyecto en el siguiente enlace:
+### 👉 Proyectos para el Módulo PF IoT (PDF) 
+🔁 Organización por Sprints
+A continuación, se detalla la planificación semanal del módulo, dividida en tres sprints:  
+
+🔁 SPRINT 1  
+
+Exploración y Diseño Conceptual (Semanas 1 a 3)
+🎯 Objetivo: Identificar la problemática industrial, investigar, seleccionar tecnologías y diseñar la arquitectura del sistema.
+Conformación de equipos y análisis de áreas.
+
+Benchmarking tecnológico y definición del problema.
+
+Selección de sensores, actuadores y protocolos.
+
+Diseño preliminar de red IoT y lógica de control.
+
+Creación del repositorio en GitHub.
+
+Primeros diagramas de arquitectura y flujo.
+
+🔁 SPRINT 2  
+
+Desarrollo e Integración Técnica (Semanas 4 a 7)
+🎯 Objetivo: Desarrollar el sistema, integrar sensores, lógica de control y plataforma IoT.
+Conexión de sensores físicos o virtuales.
+
+Implementación de lógica de automatización.
+
+Ingesta de datos y visualización inicial en dashboard.
+
+Pruebas funcionales del sistema integrado.
+
+Validación técnica y mejoras sobre el prototipo.
+
+🔁 SPRINT 3  
+
+Optimización y Presentación Final (Semanas 8 a 10)
+🎯 Objetivo: Optimizar el sistema, completar la documentación técnica y presentar el proyecto final.
+Ajustes técnicos y mejoras visuales.
+
+Finalización de la documentación por materias.
+
+Validación cruzada entre equipos (testing).
+
+Ensayo y presentación final.
+
+Autoevaluación y coevaluación.
+
+### 🎯 Entregable final (Semana 10)  
+
+**Prototipo funcional (simulado o físico)**
+
+**Dashboard operativo**
+
+**Documentación técnica completa**
+
+**Repositorio Git con historial del trabajo**
+
+**Exposición y defensa del proyecto en equipo**
 
 ### Profesor
 - Cristian Gonzalo Vera | https://github.com/Gona79
@@ -30,8 +104,7 @@ luz o temperatura usando OPA.
 - Lisandro Juncos | GitHub: https://github.com/Lisandro-05
 - Nahuel Velez | GitHub: https://github.com/ISPC-TST-PI-I-2024/ISPC_PI_Lucas_Nahuel_Velez 
 - Jose Marquez | GitHub: https://github.com/ISPC-TST-PI-I-2024/josemarquez.git
-- Tomas Repossi | GitHub:  https://github.com/TomasRepossi
-
+- Maria Lilen Guzmán | GitHub: https://github.com/lilenguzman01
 ### Índice
 
 ### Estructura del Repositorio
@@ -52,21 +125,8 @@ luz o temperatura usando OPA.
 ## Stack Tecnológico para el Sprint Actual
 
 - IDE: **Visual Studio Code**
-- Simulador: **Proteus Profesional 8.17**
+- Simulador: **Wokwi o similar**
 
-### Sprint Actual (#2): 
-- Estudiar el funcionamiento y aplicaciones de los amplificadores
-operacionales.
-- Seleccionar un OPA adecuado para el proyecto de alarma.
-- Diseñar un circuito de alarma mejorado que incluya un OPA.
-- Simular el nuevo diseño en Proteus.
-- Realizar el montaje del circuito en una protoboard.
-- Ajustar el circuito basándose en los resultados de la simulación y las
-pruebas físicas.
-- Documentar los cambios y las mejoras realizadas.
-- Presentar el proyecto mejorado al grupo, discutiendo los desafíos
-encontrados.
-----------------------
 ## Licencia
 
 Este proyecto está licenciado bajo la Licencia Creative Commons Atribución-NoComercial (CC BY-NC). Esta licencia permite que otros remixen, adapten y construyan sobre el trabajo de forma no comercial y, aunque sus nuevos trabajos deben también reconocer al autor original y ser no comerciales, no tienen que licenciar sus obras derivadas en los mismos términos.
@@ -74,8 +134,3 @@ Este proyecto está licenciado bajo la Licencia Creative Commons Atribución-NoC
 Esta licencia es adecuada para un uso educativo y de aprendizaje, permitiendo la libre distribución y utilización del material mientras se protege contra el uso comercial sin autorización previa. Para usos comerciales, es necesario contactar a los autores para obtener permiso.
 
 Para obtener más información sobre esta licencia y ver una copia completa de sus términos, visite [Creative Commons Atribución-NoComercial (CC BY-NC)](https://creativecommons.org/licenses/by-nc/4.0/).
-
-## Contacto y Más Información
-
-- **GitHub del Equipo Scrum**: [Link al GitHub](https://github.com/equipo_scrum)
-- **Correo de Contacto**: [correo@example.com](mailto:correo@example.com)
