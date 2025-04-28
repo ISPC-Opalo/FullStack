@@ -3,6 +3,24 @@
 # Módulo Programador FullStack IoT
 ## Tecnicatura Superior en Telecomunicaciones – Segundo Año
 
+---------------------------
+
+### Profesor
+- Cristian Gonzalo Vera | https://github.com/Gona79
+
+### Miembros:
+- Luciano Lujan | GitHub: https://github.com/lucianoilujan
+- Joaquin Garzón | GitHub: https://github.com/Joacogarzonn
+- Durigutti, Vittorio | GitHub: https://github.com/vittoriodurigutti
+- Joaquin Zalazar | GitHub: https://github.com/breaakerr
+- Lisandro Juncos | GitHub: https://github.com/Lisandro-05
+- Nahuel Velez | GitHub: https://github.com/ISPC-TST-PI-I-2024/ISPC_PI_Lucas_Nahuel_Velez 
+- Jose Marquez | GitHub: https://github.com/ISPC-TST-PI-I-2024/josemarquez.git
+- Maria Lilen Guzmán | GitHub: https://github.com/lilenguzman01
+### Índice
+
+---------------------------
+
 ### 🔹 Presentación General  
 
 El módulo Programador FullStack IoT es un espacio interdisciplinario que integra las materias Arquitectura y Conectividad, Sistemas de Control y Servicios y Plataformas, orientado al diseño e implementación de soluciones IoT aplicadas a la industria.
@@ -14,12 +32,17 @@ Cada equipo debe elegir un proyecto de base a desarrollar, seleccionando una pro
 
 + Control de Inventario
 
-🗂️ Podés acceder a la descripción detallada de cada proyecto en el siguiente enlace:
-### 👉 Proyectos para el Módulo PF IoT (PDF) 
+
+-----------------------------
+
+Flujo de Accion (provisorio)
+
+![Logo de la Institución ISPC](E%20assets/image.png)
+
+-----------------------------
 🔁 Organización por Sprints
 A continuación, se detalla la planificación semanal del módulo, dividida en tres sprints:  
 
------------------------------
 
 ## SPRINT 1  
 
@@ -67,20 +90,6 @@ A continuación, se detalla la planificación semanal del módulo, dividida en t
 **Repositorio Git con historial del trabajo**
 
 **Exposición y defensa del proyecto en equipo**
-
-### Profesor
-- Cristian Gonzalo Vera | https://github.com/Gona79
-
-### Miembros:
-- Luciano Lujan | GitHub: https://github.com/lucianoilujan
-- Joaquin Garzón | GitHub: https://github.com/Joacogarzonn
-- Durigutti, Vittorio | GitHub: https://github.com/vittoriodurigutti
-- Joaquin Zalazar | GitHub: https://github.com/breaakerr
-- Lisandro Juncos | GitHub: https://github.com/Lisandro-05
-- Nahuel Velez | GitHub: https://github.com/ISPC-TST-PI-I-2024/ISPC_PI_Lucas_Nahuel_Velez 
-- Jose Marquez | GitHub: https://github.com/ISPC-TST-PI-I-2024/josemarquez.git
-- Maria Lilen Guzmán | GitHub: https://github.com/lilenguzman01
-### Índice
 
 ### Estructura del Repositorio
 
