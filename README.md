@@ -12,74 +12,49 @@ El trabajo se organiza bajo el enfoque de Aprendizaje Basado en Proyectos (ABP),
 
 Cada equipo debe elegir un proyecto de base a desarrollar, seleccionando una problemática dentro de una de las siguientes 10 áreas industriales:  
 
-* Gestión Energética
-
-+ Monitoreo Ambiental
-
-+ Trazabilidad de Producción y Logística
-
-+ Mantenimiento Predictivo
-
-+ Seguridad Industrial
-
-+ Monitoreo de Infraestructura
-
-+ Agricultura Inteligente (AgTech)
-
 + Control de Inventario
-
-+ Gestión de Recursos Hídricos
-
-+ Control de Calidad en Producción
 
 🗂️ Podés acceder a la descripción detallada de cada proyecto en el siguiente enlace:
 ### 👉 Proyectos para el Módulo PF IoT (PDF) 
 🔁 Organización por Sprints
 A continuación, se detalla la planificación semanal del módulo, dividida en tres sprints:  
 
-🔁 SPRINT 1  
+-----------------------------
 
-Exploración y Diseño Conceptual (Semanas 1 a 3)
-🎯 Objetivo: Identificar la problemática industrial, investigar, seleccionar tecnologías y diseñar la arquitectura del sistema.
-Conformación de equipos y análisis de áreas.
+## SPRINT 1  
 
-Benchmarking tecnológico y definición del problema.
+### Exploración y Diseño Conceptual (Semanas 1 a 3)
+🎯 **Objetivo:** Identificar la problemática industrial, investigar, seleccionar tecnologías y diseñar la arquitectura del sistema.
+- Conformación de equipos y análisis de áreas.
+- Benchmarking tecnológico y definición del problema.
+- Selección de sensores, actuadores y protocolos.
+- Diseño preliminar de red IoT y lógica de control.
+- Creación del repositorio en GitHub.
+- Primeros diagramas de arquitectura y flujo.
 
-Selección de sensores, actuadores y protocolos.
+-----------------------------
 
-Diseño preliminar de red IoT y lógica de control.
+## SPRINT 2  
 
-Creación del repositorio en GitHub.
+### Desarrollo e Integración Técnica (Semanas 4 a 7)
+🎯 **Objetivo**: Desarrollar el sistema, integrar sensores, lógica de control y plataforma IoT.
+- Conexión de sensores físicos o virtuales.
+- Implementación de lógica de automatización.
+- Ingesta de datos y visualización inicial en dashboard.
+- Pruebas funcionales del sistema integrado.
+- Validación técnica y mejoras sobre el prototipo.
 
-Primeros diagramas de arquitectura y flujo.
+-----------------------------
 
-🔁 SPRINT 2  
+## SPRINT 3  
 
-Desarrollo e Integración Técnica (Semanas 4 a 7)
-🎯 Objetivo: Desarrollar el sistema, integrar sensores, lógica de control y plataforma IoT.
-Conexión de sensores físicos o virtuales.
-
-Implementación de lógica de automatización.
-
-Ingesta de datos y visualización inicial en dashboard.
-
-Pruebas funcionales del sistema integrado.
-
-Validación técnica y mejoras sobre el prototipo.
-
-🔁 SPRINT 3  
-
-Optimización y Presentación Final (Semanas 8 a 10)
-🎯 Objetivo: Optimizar el sistema, completar la documentación técnica y presentar el proyecto final.
-Ajustes técnicos y mejoras visuales.
-
-Finalización de la documentación por materias.
-
-Validación cruzada entre equipos (testing).
-
-Ensayo y presentación final.
-
-Autoevaluación y coevaluación.
+### Optimización y Presentación Final (Semanas 8 a 10)
+🎯 **Objetivo**: Optimizar el sistema, completar la documentación técnica y presentar el proyecto final.
+- Ajustes técnicos y mejoras visuales.
+- Finalización de la documentación por materias.
+- Validación cruzada entre equipos (testing).
+- Ensayo y presentación final.
+- Autoevaluación y coevaluación.
 
 ### 🎯 Entregable final (Semana 10)  
 
@@ -126,6 +101,57 @@ Autoevaluación y coevaluación.
 
 - IDE: **Visual Studio Code**
 - Simulador: **Wokwi o similar**
+
+-----------------------------
+
+## Linea de Trabajo del Proyecto
+
+**Semana 1:** Definición de alcance y arquitectura
+- Terminar de definir qué módulos van a tener (control de stock, pedidos, AGV virtual, dashboard).
+- Diagramar la arquitectura de conectividad (qué se comunica con qué, cómo).
+
+- Tecnologias a usar: 
+
+----Entregable: Mapa de arquitectura + definición de herramientas.
+
+**Semana 2:** Modelado de stock y pedidos
+- Armar una base de datos o sistema simple para manejar inventario.
+- Programar la entrada de pedidos manual o simulada (por ejemplo, cada cierto tiempo se genera un pedido).
+
+----Entregable: Simulación de pedidos + base de stock inicial.
+
+**Semana 3:** Simulación de AGV
+- Crear un AGV virtual: que "reciba" una orden y la "ejecute" (puede ser moverse en un mapa simple, o simplemente cambiar un estado).
+- Que reporte su estado ("En camino", "Entregado", etc.).
+
+----Entregable: AGV funcional en simulación.
+
+**Semana 4:** Automatización de entrada/salida de stock
+- Al completar una entrega, el stock debe actualizarse automáticamente.
+- Validar pedidos contra stock disponible.
+
+----Entregable: Flujo cerrado: Pedido → AGV → Entrega → Stock actualizado.
+
+**Semana 5:** Dashboard o consola de control
+- Montar una vista para monitorear stock, pedidos pendientes y estado de AGVs.
+- Puede ser algo sencillo: una web estática con actualizaciones en vivo, un Node-RED dashboard, o un panel en Python.
+
+----Entregable: Dashboard operativo.
+
+**Semana 6:** Testing completo y mejoras
+- Hacer correr simulaciones múltiples: varios pedidos, varias entregas.
+- Corregir bugs y mejorar la experiencia (por ejemplo, mostrar alarmas si el stock es bajo).
+
+----Entregable: Sistema testeado de punta a punta.
+
+**Semana 7:** Preparación final
+- Armado de la presentación.
+- Documentación clara de arquitectura, flujo, problemas encontrados, oportunidades de mejora.
+- Práctica de la demo.
+
+----Entregable: Demo lista + Informe final + Slides de presentación.
+
+-----------------------------
 
 ## Licencia
 
