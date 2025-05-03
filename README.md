@@ -37,9 +37,19 @@ Cada equipo debe elegir un proyecto de base a desarrollar, seleccionando una pro
 
 Flujo de Accion (provisorio)
 
-![Logo de la Institución ISPC](E%20assets/image.png)
+![Flujo de datos](E%20assets/flujoDatos.png)
 
 -----------------------------
+
+
+-----------------------------
+
+Arquitectura del Sistema 
+
+![Arquitectura del sistema](E%20assets/arquitectura.png)
+
+-----------------------------
+
 🔁 Organización por Sprints
 A continuación, se detalla la planificación semanal del módulo, dividida en tres sprints:  
 
