@@ -116,18 +116,9 @@ El trabajo se organiza bajo el enfoque de Aprendizaje Basado en Proyectos (ABP),
 
 ### **5. Frontend (Dashboard para visualización en tiempo real)**
 
-#### **Lenguaje:**
-
--   **HTML, CSS, JavaScript:** Para construir la interfaz de usuario del dashboard (OPCIONAL).
-
 #### **Herramientas:**
 
--   **Chart.js o similar:** Biblioteca para visualizar datos en gráficos dinámicos.
--   **Grafana (opcional):** Herramienta popular para crear dashboards en tiempo real conectados a bases de datos como MariaDB.
-
-#### **Servidor frontend:**
-
--   **Live Server (VS Code extension):** Para probar el frontend localmente durante el desarrollo.
+**GRAFANA:** Tablero de visualización en tiempo real.
 
 ----------
 
@@ -189,7 +180,7 @@ Node.js, Express.js, MariaDB, MQTT
 
 **Frontend**
 
-HTML, CSS, JavaScript, Chart.js/Grafana
+Grafana
 
 **Comunicaciones**
 
