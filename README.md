@@ -5,18 +5,20 @@
 
 ---------------------------
 
-### Profesor
-- Cristian Gonzalo Vera | https://github.com/Gona79
+### Profesores
+- Ing. Morales Jorge Elias | https://github.com/JorEl057
+- Mario Alejandro Gonzalez | https://github.com/mariogonzalezispc
+- Alejandro Mainero
 
 ### Miembros:
 - Luciano Lujan | GitHub: https://github.com/lucianoilujan
-- Joaquin Garzón | GitHub: https://github.com/Joacogarzonn
 - Durigutti, Vittorio | GitHub: https://github.com/vittoriodurigutti
 - Joaquin Zalazar | GitHub: https://github.com/breaakerr
 - Lisandro Juncos | GitHub: https://github.com/Lisandro-05
 - Nahuel Velez | GitHub: https://github.com/ISPC-TST-PI-I-2024/ISPC_PI_Lucas_Nahuel_Velez 
 - Jose Marquez | GitHub: https://github.com/ISPC-TST-PI-I-2024/josemarquez.git
 - Maria Lilen Guzmán | GitHub: https://github.com/lilenguzman01
+- Tiziano Paez | Github: https://github.com/tpaez
 ### Índice
 
 ---------------------------
@@ -24,13 +26,12 @@
 ### 🔹 Presentación General  
 
 El módulo Programador FullStack IoT es un espacio interdisciplinario que integra las materias Arquitectura y Conectividad, Sistemas de Control y Servicios y Plataformas, orientado al diseño e implementación de soluciones IoT aplicadas a la industria.
-Durante 10 semanas, los estudiantes trabajarán en equipos de 3 a 5 integrantes, desarrollando un proyecto técnico completo que abarque sensado, conectividad, automatización, visualización de datos y documentación profesional.
-El trabajo se organiza bajo el enfoque de Aprendizaje Basado en Proyectos (ABP), con metodología Scrum: tres sprints, entregas semanales y seguimiento por parte de los docentes de cada materia. El desarrollo debe gestionarse en GitHub y documentarse en cada etapa.
+Los estudiantes trabajarán en equipos desarrollando un proyecto técnico completo que abarque sensado, conectividad, automatización, visualización de datos y documentación profesional.
+El trabajo se organiza bajo el enfoque de Aprendizaje Basado en Proyectos (ABP), con metodologías ágiles Scrum y Kanban.
+El desarrollo debe gestionarse en GitHub y documentarse en el propio repositorio.
 ### 🔹 Selección del Proyecto  
 
-Cada equipo debe elegir un proyecto de base a desarrollar, seleccionando una problemática dentro de una de las siguientes 10 áreas industriales:  
-
-+ Control de Inventario
+Detección de gases
 
 
 -----------------------------
