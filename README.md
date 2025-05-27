@@ -22,6 +22,13 @@
 ### Índice
 
 ---------------------------
+### Estructura del Repositorio
+
+- **A requisitos**: Contiene documentos de requisitos proporcionados por el docente.
+- **B investigacion**: Investigaciones realizadas por los estudiantes.
+- **C prototipo**: Implementaciones específicas y código prototipo para el proyecto.
+- **D presentacion**: Incluye grabaciones y bitácoras de las reuniones de Scrum, así como las presentaciones de progreso.
+- **E assets**: Contiene recursos gráficos como imágenes y otros archivos necesarios para la documentación.
 
 ### 🔹 Presentación General  
 
@@ -29,18 +36,36 @@ El módulo Programador FullStack IoT es un espacio interdisciplinario que integr
 Los estudiantes trabajarán en equipos desarrollando un proyecto técnico completo que abarque sensado, conectividad, automatización, visualización de datos y documentación profesional.
 El trabajo se organiza bajo el enfoque de Aprendizaje Basado en Proyectos (ABP), con metodologías ágiles Scrum y Kanban.
 El desarrollo debe gestionarse en GitHub y documentarse en el propio repositorio.
+
+---------------------------
+
 ### 🔹 Selección del Proyecto  
 
-Detección de gases
+Sistema de detección y extracción de gases inflamables 🔥​​🚨​
 
+### 🔹 Problemática a tratar
+Disponemos de una localización con maquinaria con alta posibilidad de emanación de gases contaminantes inflamables. Los mismos no son problemáticos exceptuando concentración alta durante periodos prolongados. Tenemos distribuidos una serie de de sensores de gas combustibles a lo largo del deposito mencionado, ubicados estratégicamente. El mismo dispone de energía eléctrica provista por generadores, pero no de internet. Mediante la aplicación de dispositivos sensores con comunicación LoRa incorporado buscamos estar informados en el estado a tiempo real dentro de el sitio. Esto nos permite llevar un seguimiento y análisis preventivo, e identificar fallas que deban requerir intervención humana. Pero a su vez, la distancia supone un problema para asistir fallas, por lo que disponemos de dispositivos extractores con potencia variable distribuidos dentro. Nuestro sistema receptor se encarga de la manipulación de los umbrales mediante los cuales se dispara la accion y potencia de dichos extractores. Disponemos como extra de accionadores manuales remotos via apps con los que disparar los extractores ante criterio humano.
 
+-----------------------------
+
+## Stack Tecnológico Común
+
+- Control de Versiones: **Git y GitHub**
+- Metodologías Ágiles: **Scrum y Kanban**
+- Aprendizaje Basado en Proyectos (ABP)
+- Soporte DevOps por parte del docente
+
+## Stack Tecnológico para el desarrollo
+
+- IDE: **Visual Studio Code**
+- Simulador: **Wokwi o similar**
 -----------------------------
 
 Flujo de Accion (provisorio)
 
 ![Flujo de datos](E%20assets/flujoDatos.png)
 
------------------------------
+
 
 
 -----------------------------
@@ -102,25 +127,8 @@ A continuación, se detalla la planificación semanal del módulo, dividida en t
 
 **Exposición y defensa del proyecto en equipo**
 
-### Estructura del Repositorio
 
-- **A requisitos**: Contiene documentos de requisitos proporcionados por el docente.
-- **B investigacion**: Investigaciones realizadas por los estudiantes.
-- **C prototipo**: Implementaciones específicas de la capa de almacenamiento.
-- **D presentacion**: Incluye grabaciones y bitácoras de las reuniones de Scrum, así como las presentaciones de progreso.
-- **zassets**: Contiene recursos gráficos como imágenes y otros archivos necesarios para la documentación.
 
-## Stack Tecnológico Común
-
-- Control de Versiones: **Git y GitHub**
-- Metodologías Ágiles: **Scrum y Kanban**
-- Aprendizaje Basado en Proyectos (ABP)
-- Soporte DevOps por parte del docente
-
-## Stack Tecnológico para el Sprint Actual
-
-- IDE: **Visual Studio Code**
-- Simulador: **Wokwi o similar**
 
 -----------------------------
 
