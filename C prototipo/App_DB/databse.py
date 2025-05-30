@@ -293,7 +293,7 @@ if __name__ == "__main__":
     from dotenv import load_dotenv
     load_dotenv() # Carga las variables de entorno del archivo .env al ejecutar este script
 
-    logger.info ( Iniciando pruebas de funciones de la base de datos (database.py)")
+    logger.info ( "Iniciando pruebas de funciones de la base de datos (database.py)")
 
     # PRUEBAS DE INSERCIÓN (para asegurar que tenemos datos para consultar)
     logger.info("Realizando inserciones de prueba para asegurar datos para las consultas...")
@@ -382,5 +382,4 @@ if __name__ == "__main__":
             logger.info(f"  - {row}")
     else:
         logger.warning("No se encontró historial de extractores automáticos.")
-
-    logger.info( Fin de las pruebas de las funciones de la base de datos")
+    logger.info ("Fin de las pruebas de las funciones de la base de datos")
