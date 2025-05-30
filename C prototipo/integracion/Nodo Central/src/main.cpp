@@ -8,16 +8,12 @@
 // ==============================
 // CONFIGURACIÓN WIFI y MQTT
 // ==============================
-const char* ssid = "SSID";
-const char* password = "PASSWORD";
 const char* mqtt_server = "test.mosquitto.org";
 const char* topic_config = "gas/control";
 const char* topic_envio = "gas/datos";
 
-char ssid[32];
-char password[64];
-float umbralGas;
-bool modoAutomatico = true;
+char ssid[32]       = "SSID";
+char password[64]   = "PASSWORD";
 
 Preferences prefs;
 
@@ -56,11 +52,11 @@ void publicarEstadoMQTT();
 // ==============================
 void cargarConfiguracion() {
   prefs.begin("config", false);
-  String s = prefs.getString("ssid", DEFAULT_SSID);
+  String s = prefs.getString("ssid", ssid);
   s.toCharArray(ssid, sizeof(ssid));
-  String p = prefs.getString("pass", DEFAULT_PASSWORD);
+  String p = prefs.getString("pass", password);
   p.toCharArray(password, sizeof(password));
-  umbralGas = prefs.getFloat("umbralGas", DEFAULT_UMB_GAS);
+  umbralGas = prefs.getFloat("umbralGas", umbralGas);
   prefs.end();
 }
 
@@ -198,14 +194,9 @@ void callbackMQTT(char* topic, byte* payload, unsigned int length) {
     nuevoPass.toCharArray(password, sizeof(password));
     guardarConfiguracion();
     Serial.println("Password guardada");
-  } else if (msg.startsWith("set_pwmMax:")) {
-    pwmMax = msg.substring(11).toInt();
-    extractor.setPwmMax(pwmMax);
-    guardarConfiguracion();
-    Serial.println("PWM Max guardado");
   } else if (msg.startsWith("set_velObj:")) {
     uint8_t v = msg.substring(11).toInt();
-    extractor.setObjetivo(v);
+    extractor.establecerVelocidad(v);
     guardarConfiguracion();
     Serial.println("Velocidad Objetivo guardada");
   } else {

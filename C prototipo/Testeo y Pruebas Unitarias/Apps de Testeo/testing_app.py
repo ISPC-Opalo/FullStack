@@ -4,9 +4,11 @@ import json
 import paho.mqtt.client as mqtt
 
 # ——— CONFIGURACIÓN —————————————————————————————————————————————
-BROKER   = 'test.mosquito.org'     
+BROKER   = 'test.mosquitto.org'     
 PORT     = 1883                     
 TOPIC    = 'gas/datos'
+
+INTERVAL_SECONDS   = 30
 
 GATEWAYS = [
     'esp32-central-001',
@@ -67,7 +69,7 @@ def generate_payload() -> str:
     return json.dumps(payload)
 
 def main():
-    client = mqtt.Client()
+    client = mqtt.Client(protocol=mqtt.MQTTv5)
     client.connect(BROKER, PORT, keepalive=60)
     payload = generate_payload()
     client.publish(TOPIC, payload)
@@ -75,9 +77,26 @@ def main():
     print(payload, "\n")
     client.disconnect()
 
-if __name__ == "__main__":
-    main()
+def publish_once():
+    client = mqtt.Client(protocol=mqtt.MQTTv5)
+    client.connect(BROKER, PORT, keepalive=60)
+    payload = generate_payload()
+    client.publish(TOPIC, payload)
+    print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Publicado en mqtt://{BROKER}:{PORT}/{TOPIC}:\n{payload}\n")
+    client.disconnect()
 
+if __name__ == "__main__":
+    print(f"Iniciando publicación cada {INTERVAL_SECONDS} segundos. Pulsa Ctrl+C para detener.")
+    try:
+        while True:
+            try:
+                publish_once()
+            except Exception as err:
+                # Si falla la publicación, lo anotamos pero seguimos en el bucle
+                print(f"ERROR al publicar: {err}")
+            time.sleep(INTERVAL_SECONDS)
+    except KeyboardInterrupt:
+        print("\nDetenido por el usuario. Saliendo…")
 
 # ————————————————————————————————————————————————————————————————
 # Ejemplo de payload generado:

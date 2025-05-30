@@ -8,76 +8,32 @@ from dateutil.parser import ParserError
 # FORMATO DE LOS MENSAJES
 #========================================
 
-#----------------------------------------
-# Submodelos
-#----------------------------------------
-class SensorData(BaseModel):
-    temperaturaAgua: float
-    temperaturaAire: float
-    humedad: float
-    nivelAgua: float
-    flujoAgua: float
-    luz: int
-    gas: int
-    corriente: float
-    voltaje: float
-    potencia: float
-    phValor: float
+class SensorPayload(BaseModel):
+    ppm: float = Field(..., description="Concentración en ppm")
+    ratio: float = Field(..., description="Relación Rs/Ro")
+    raw: int = Field(..., description="Valor bruto ADC")
+    estado: str = Field(..., description="NORMAL o ALERTA")
+    umbral: float = Field(..., description="Umbral configurado")
 
-    # Timestamp local opcional por sensor, tal como lo envía el dispositivo
-    hora: Optional[datetime] = Field(
-        None,
-        description="Marca de tiempo local del sensor, formato 'YYYY-M-D H:M:S'"
-    )
+class ControlPayload(BaseModel):
+    automatico: bool = Field(..., description="Modo automático activado")
+    encendido: bool = Field(..., description="Extractor encendido")
+    transicion: bool = Field(..., description="En transición de velocidad")
+    velocidad: int = Field(..., description="Porcentaje de velocidad actual (0-100)")
 
-    @validator('hora', pre=True)
-    def parse_hora(cls, v):
-        if v is None:
-            return None
-        try:
-            # Acepta distintos formatos y parsea
-            return parser.parse(v)
-        except (ParserError, TypeError, ValueError):
-            # En caso de formato inválido, se ignora
-            return None
-
-class Controls(BaseModel):
-    bomba: bool
-    luces: bool
-    alarma: bool
-    modoAutomatico: bool
-
-#----------------------------------------
-# Nodo con datos de cada dispositivo
-#----------------------------------------
-class Node(BaseModel):
-    deviceId: str
-    timestamp: datetime
-    transmitter: Optional[bool] = Field(None, description="Flag transmisor, si aplica")
-    reciber:    Optional[bool] = Field(None, description="Flag receptor, si aplica")
-    sensors:    SensorData
-    controls:   Controls
-
-    @validator('timestamp', pre=True)
-    def parse_timestamp(cls, v):
-        try:
-            return parser.parse(v)
-        except (ParserError, TypeError, ValueError):
-            # Si viene mal el timestamp, retorna hora actual UTC
-            return datetime.utcnow()
-
-#----------------------------------------
-# Modelo principal
-#----------------------------------------
 class GatewayMessage(BaseModel):
-    gatewayId: str
-    timestamp: datetime
-    nodes: List[Node]
+    gatewayId: str = Field(..., description="Identificador del gateway")
+    timestamp: int = Field(..., description="Milisegundos desde arranque")
+    sensor: SensorPayload
+    control: ControlPayload
+    estadoVentilador: str = Field(..., description="String detallado de estado del ventilador")
 
-    @validator('timestamp', pre=True)
-    def parse_gateway_timestamp(cls, v):
-        try:
-            return parser.parse(v)
-        except (ParserError, TypeError, ValueError):
-            # Si formato inválido, usar UTC now
-            return datetime.utcnow()
+    class Config:
+        extra = "ignore"
+
+# ========================================
+# EJEMPLO DE USO:
+# data = json.loads(raw_payload)
+# msg = GatewayMessage(**data)
+# print(msg.sensor.ppm, msg.control.velocidad)
+# ========================================
