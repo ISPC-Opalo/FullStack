@@ -1,7 +1,7 @@
 import logging
 from app.config import settings
 
-# Nivel de log por defecto, puedes añadir LOG_LEVEL en tu .env si quieres parametrizarlo
+# De momento solo defino nivel de log en INFO, podemos agregar warningins o errores si nos hace falta.
 DEFAULT_LEVEL = getattr(logging, "INFO", logging.INFO)
 
 def configure_root_logger():
@@ -14,7 +14,7 @@ def configure_root_logger():
     else:
         level = DEFAULT_LEVEL
 
-    # Solo configurar una vez
+
     root = logging.getLogger()
     if not root.handlers:
         handler = logging.StreamHandler()

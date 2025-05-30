@@ -2,6 +2,7 @@
 #include <SPI.h>
 #include <LoRa.h>
 #include <PubSubClient.h>
+#include <Preferences.h>
 #include "ControlVentilador.h"
 
 // ==============================
@@ -9,10 +10,16 @@
 // ==============================
 const char* ssid = "SSID";
 const char* password = "PASSWORD";
-const char* mqtt_server = "mosqiit.example.com";
+const char* mqtt_server = "test.mosquitto.org";
+const char* topic_config = "gas/control";
+const char* topic_envio = "gas/datos";
 
-WiFiClient espClient;
-PubSubClient client(espClient);
+char ssid[32];
+char password[64];
+float umbralGas;
+bool modoAutomatico = true;
+
+Preferences prefs;
 
 // ==============================
 // PINES Y VARIABLES
@@ -20,8 +27,10 @@ PubSubClient client(espClient);
 #define LORA_SS    5
 #define LORA_RST   14
 #define LORA_DIO0  2
-
 #define PIN_EXTRACTOR 27
+
+WiFiClient espClient;
+PubSubClient client(espClient);
 ControlVentilador extractor(PIN_EXTRACTOR, 100); // pin, PWM mínimo
 
 float umbralGas = 500.0;
@@ -31,7 +40,11 @@ float ultimaRatio = 0;
 int ultimoRaw = 0;
 String ultimoEstado = "NORMAL";
 
-// ==== Prototipos de funciones ====
+// ==============================
+// Prototipos
+// ==============================
+void cargarConfiguracion();
+void guardarConfiguracion();
 void callbackMQTT(char* topic, byte* payload, unsigned int length);
 void reconectarMQTT();
 void recibirLoRa();
@@ -39,22 +52,45 @@ void procesarMensajeLoRa(String mensaje);
 void publicarEstadoMQTT();
 
 // ==============================
+// Funciones Preferences
+// ==============================
+void cargarConfiguracion() {
+  prefs.begin("config", false);
+  String s = prefs.getString("ssid", DEFAULT_SSID);
+  s.toCharArray(ssid, sizeof(ssid));
+  String p = prefs.getString("pass", DEFAULT_PASSWORD);
+  p.toCharArray(password, sizeof(password));
+  umbralGas = prefs.getFloat("umbralGas", DEFAULT_UMB_GAS);
+  prefs.end();
+}
+
+void guardarConfiguracion() {
+  prefs.begin("config", false);
+  prefs.putString("ssid", ssid);
+  prefs.putString("pass", password);
+  prefs.putFloat("umbralGas", umbralGas);
+  prefs.end();
+}
+
+// ==============================
 // SETUP
 // ==============================
 void setup() {
   Serial.begin(115200);
+  cargarConfiguracion();
 
   // Inicializar extractor
   extractor.inicializar();
   extractor.configurarArranqueSuave(true, 100);
   extractor.configurarTransicion(5, 50);
 
-  // WiFi
+  // Conexión Wi-Fi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500); Serial.print(".");
+    delay(500);
+    Serial.print(".");
   }
-  Serial.println("\n WiFi conectado");
+  Serial.println("\nWiFi conectado");
   delay(3000);
 
   // MQTT
@@ -64,7 +100,8 @@ void setup() {
   // LoRa
   LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
   if (!LoRa.begin(915E6)) {
-    Serial.println(" Error iniciando LoRa"); while (1);
+    Serial.println(" Error iniciando LoRa");
+    while (1);
   }
   Serial.println(" LoRa listo");
 }
@@ -86,7 +123,7 @@ void loop() {
 void recibirLoRa() {
   int packetSize = LoRa.parsePacket();
   if (packetSize) {
-    String msg = "";
+    String msg;
     while (LoRa.available()) msg += (char)LoRa.read();
     Serial.println(" LoRa recibido: " + msg);
     procesarMensajeLoRa(msg);
@@ -114,11 +151,6 @@ void procesarMensajeLoRa(String mensaje) {
 
     estado = (ppm > umbralGas) ? "ALERTA" : "NORMAL";
 
-    ultimaPPM = ppm;
-    ultimaRatio = ratio;
-    ultimoRaw = raw;
-    ultimoEstado = estado;
-
     if (modoAutomatico) {
       if (ppm > umbralGas) {
         int pwmPorcentaje = map(ppm, umbralGas, 1000, 50, 100);
@@ -137,8 +169,8 @@ void procesarMensajeLoRa(String mensaje) {
 // MQTT
 // ==============================
 void callbackMQTT(char* topic, byte* payload, unsigned int length) {
-  String msg = "";
-  for (int i = 0; i < length; i++) msg += (char)payload[i];
+  String msg;
+  for (unsigned int i = 0; i < length; i++) msg += (char)payload[i];
   Serial.println(" Comando MQTT: " + msg);
 
   if (msg == "extractor_on") {
@@ -154,8 +186,32 @@ void callbackMQTT(char* topic, byte* payload, unsigned int length) {
     if (nuevo > 0 && nuevo < 5000) {
       umbralGas = nuevo;
       Serial.println(" Nuevo umbral: " + String(umbralGas));
+      guardarConfiguracion();
     }
+  } else if (msg.startsWith("set_ssid:")) {
+    String nuevoSSID = msg.substring(9);
+    nuevoSSID.toCharArray(ssid, sizeof(ssid));
+    guardarConfiguracion();
+    Serial.println("SSID guardado");
+  } else if (msg.startsWith("set_pass:")) {
+    String nuevoPass = msg.substring(9);
+    nuevoPass.toCharArray(password, sizeof(password));
+    guardarConfiguracion();
+    Serial.println("Password guardada");
+  } else if (msg.startsWith("set_pwmMax:")) {
+    pwmMax = msg.substring(11).toInt();
+    extractor.setPwmMax(pwmMax);
+    guardarConfiguracion();
+    Serial.println("PWM Max guardado");
+  } else if (msg.startsWith("set_velObj:")) {
+    uint8_t v = msg.substring(11).toInt();
+    extractor.setObjetivo(v);
+    guardarConfiguracion();
+    Serial.println("Velocidad Objetivo guardada");
+  } else {
+    Serial.println(" Comando desconocido: " + msg);
   }
+
 }
 
 void reconectarMQTT() {
@@ -163,7 +219,7 @@ void reconectarMQTT() {
     Serial.print("Conectando a MQTT...");
     if (client.connect("esp32-central")) {
       Serial.println(" ok");
-      client.subscribe("gas/control");
+      client.subscribe("topic_config");
     } else {
       Serial.print("  (rc=");
       Serial.print(client.state());
@@ -173,6 +229,9 @@ void reconectarMQTT() {
   }
 }
 
+// ==============================
+// Publicar estado
+// ==============================
 void publicarEstadoMQTT() {
   String payload = "{";
   payload += "\"gatewayId\":\"esp32-central-001\",";
@@ -193,7 +252,7 @@ void publicarEstadoMQTT() {
   payload += "\"estadoVentilador\":\"" + extractor.obtenerEstadoCompleto() + "\"";
   payload += "}";
 
-  client.publish("gas/datos", payload.c_str());
+  client.publish("topic_envio", payload.c_str());
   Serial.println(" MQTT publicado:");
   Serial.println(payload);
 }

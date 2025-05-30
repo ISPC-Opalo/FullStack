@@ -37,5 +37,5 @@ if __name__ == "__main__":
         "app.main:tmpl_app",
         host=settings.api_host,
         port=settings.api_port,
-        reload=True  # Solo en desarrollo; quitar en producción
+        reload=True  # Solo en desarrollo =TRUE; quitar en producción
     )
