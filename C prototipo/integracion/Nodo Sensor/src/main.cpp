@@ -3,7 +3,7 @@
 #include <LoRa.h>
 
 //=======================================
-// PINES LoRa para Arduino Nano
+// PINES LoRa para Arduino Nano (IGUAL QUE ARDUINO UNO QUE FUNCIONA)
 //=======================================
 #define PIN_SS    10   // NSS
 #define PIN_RST   9    // Reset
@@ -40,7 +40,6 @@ void sendLoRaMessage(String message);
 void checkIncomingMessages();
 void processMessage(String message);
 
-
 //=======================================
 // SETUP
 //=======================================
@@ -50,15 +49,23 @@ void setup() {
   
   Serial.println(F("=== NODO SENSOR NANO INICIANDO ==="));
 
-  // Inicializar LoRa
+  // Inicializar LoRa CON LA CONFIGURACIÓN QUE FUNCIONA
   LoRa.setPins(PIN_SS, PIN_RST, PIN_DIO0);
-  if (!LoRa.begin(915E6)) {
+  
+  // FRECUENCIA CAMBIADA A 433MHz (LA QUE FUNCIONA)
+  if (!LoRa.begin(433000000L)) {
     Serial.println(F("Error iniciando LoRa"));
     while (1);
   }
+  
+  // CONFIGURACIÓN EXACTA DEL ARDUINO UNO QUE FUNCIONA
   LoRa.setTxPower(20);
   LoRa.setSpreadingFactor(7);
-  Serial.println(F("LoRa listo"));
+  LoRa.setSignalBandwidth(125E3);
+  LoRa.setCodingRate4(5);
+  LoRa.enableCrc();
+  
+  Serial.println(F("LoRa listo en 433MHz"));
 
   // Calibrar sensor MQ
   Serial.println(F("Calibrando sensor MQ..."));
@@ -178,24 +185,35 @@ void readAndSendGasData() {
 }
 
 void sendLoRaMessage(String message) {
+  Serial.print(F("📤 Enviando: "));
+  Serial.println(message);
+  
   LoRa.beginPacket();
   LoRa.print(message);
-  LoRa.endPacket();
   
-  Serial.print(F(" Enviado: "));
-  Serial.println(message);
+  if (LoRa.endPacket()) {
+    Serial.println(F("✅ Enviado OK"));
+  } else {
+    Serial.println(F("❌ Error envío"));
+  }
 }
 
 void checkIncomingMessages() {
   int packetSize = LoRa.parsePacket();
+  
   if (packetSize) {
+    // Leer mensaje
     String receivedMsg = "";
     while (LoRa.available()) {
       receivedMsg += (char)LoRa.read();
     }
     
-    Serial.print(F(" Recibido: "));
-    Serial.println(receivedMsg);
+    // Mostrar información como en el receptor que funciona
+    Serial.println("📥 MENSAJE: " + receivedMsg);
+    Serial.println("📶 RSSI: " + String(LoRa.packetRssi()) + " dBm");
+    Serial.println("📊 SNR: " + String(LoRa.packetSnr()) + " dB");
+    Serial.println("───────────────────────────");
+    
     processMessage(receivedMsg);
   }
 }
