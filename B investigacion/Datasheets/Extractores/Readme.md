@@ -48,4 +48,4 @@ El **ventilador/extractor ATEX UB20xx** de RAMFAN es la solución definitiva par
 
 ![Extractor](/E%20assets/extracto_monofasico.png)
 
-Fuente: [Orion Seguridad](https://orionseguridad.es/producto/ventilador-atex-ub20xx/)
+Fuente: [Orion Seguridad](https://orionseguridad.es/ventilacion-en-espacios-confinados/)
