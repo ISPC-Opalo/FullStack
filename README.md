@@ -11,14 +11,15 @@
 - Alejandro Mainero
 
 ### Miembros:
-- Luciano Lujan | GitHub: https://github.com/lucianoilujan
+- Lujan, Luciano | GitHub: https://github.com/lucianoilujan
 - Durigutti, Vittorio | GitHub: https://github.com/vittoriodurigutti
-- Joaquin Zalazar | GitHub: https://github.com/breaakerr
-- Lisandro Juncos | GitHub: https://github.com/Lisandro-05
-- Nahuel Velez | GitHub: https://github.com/ISPC-TST-PI-I-2024/ISPC_PI_Lucas_Nahuel_Velez 
-- Jose Marquez | GitHub: https://github.com/ISPC-TST-PI-I-2024/josemarquez.git
-- Maria Lilen Guzmán | GitHub: https://github.com/lilenguzman01
-- Tiziano Paez | Github: https://github.com/tpaez
+- Zalazar, Joaquin | GitHub: https://github.com/breaakerr
+- Juncos, Lisandro | GitHub: https://github.com/Lisandro-05
+- Velez, Nahuel | GitHub: https://github.com/ISPC-TST-PI-I-2024/ISPC_PI_Lucas_Nahuel_Velez 
+- Marquez, Jose | GitHub: https://github.com/ISPC-TST-PI-I-2024/josemarquez.git
+- Guzmán, Maria Lilen | GitHub: https://github.com/lilenguzman01
+- Paez, Tiziano | Github: https://github.com/tpaez
+
 ### Índice
 
 ---------------------------
