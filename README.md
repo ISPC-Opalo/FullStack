@@ -51,9 +51,9 @@ Permitiendo tener en tiempo real una vista del estado de los mismos, y del entor
 - [Estado Sensores](http://telecomunicaciones.ddns.net:8080/grafana/public-dashboards/5c6d33af6d3c4dd8b2dc677b6a31fec4)
 
 <p align="center">
-  <img src="E%20assets/grafana1.png" alt="Imagen 1" width="250"/>
-  <img src="E%20assets/grafana2.png" alt="Imagen 2" width="250"/>
-  <img src="E%20assets/grafana3.png" alt="Imagen 3" width="250"/>
+  <img src="E%20assets/grafana1.png" alt="Imagen 1" width="400"/>
+  <img src="E%20assets/grafana2.png" alt="Imagen 2" width="400"/>
+  <img src="E%20assets/grafana3.png" alt="Imagen 3" width="400"/>
 </p>
 
 ---------------------------
@@ -89,7 +89,7 @@ Disponemos de una localización con maquinaria con alta posibilidad de emanació
 - Contendores: **Docker**
 
 ### Comunicacion + Protocolos
-
+- [API_en_python](C%prototipo/Backend_API/Readme.md)
 - MQTT: Broker: Mosquitto (test.mosquitto.org) | 
 - Lora: Sin protocolo LoRaWAN - Comunicacion punto-punto TX-RX  
 - Wifi: Nodo con funcion Gateway

@@ -1,100 +1,156 @@
-## API 01
+## Documentacion de la API
 
-### Procesamiento de Informacion y Registro en BD
+-------------------------------------
 
-Esta API funcionara como el nodo conector entre el dispositivo fisico y las Bases de datos.
-Purgara la informacion, y ordenara, y posteriormente registrara en los formatos adecuador para poder reflejar los datos de manera informativa, y en tiempo real. 
-La misma escuchara de forma pasiva los mensajes presnetes en los topicos en que los dispositivos registren sus lecturas, corriendo en un contenedor Docker, conectado a la red donde se desplegaran asi mismo la base de datos en MariaDB
+### Funcion e intecnion
+Esta aplicacion funciona como un middleware. Recibira los mensajes enviados en el topic "gas/datos" mediante el despleigue de un cliente MQTT, separara y ordenara la informacion recibida hacia el formato correcto y por ultimo registrara esta en la base de datos desplegada remotamente.
 
----
+### Estrcutura
 
-### Estructura del Directorio
-
-- 📦Backend
--  ┣ 📂app                          // Directorio principal de la aplicacion
--  ┃ ┣ 📂api                        // Elementos de inico de la AIP y gestion de routas [host/api]
--  ┃ ┃ ┣ 📜routes.py                // Gestor de rutas definidas en la aplicacion
--  ┃ ┃ ┗ 📜__init__.py              // Elemento importador de los endpoind del directorio 
--  ┃ ┣ 📂models                     // Elementos asociado a modelos predefinidos, de momento solo estructura de los mensajes recividos
--  ┃ ┃ ┗ 📜mensaje.py               // Estructurador de formato de los mensjaes
--  ┃ ┣ 📂services                   // Estructura la conexion con los diferentes servicios a los que conecta la API
--  ┃ ┃ ┗ 📜maria_serv.py            // Estructura conexion con la base de datos en MySQL
+- 📦API
+-  ┣ 📂app
+-  ┃ ┣ 📂api
+-  ┃ ┃ ┣ 📜routes.py
+-  ┃ ┃ ┗ 📜__init__.py
+-  ┃ ┣ 📂models
+-  ┃ ┃ ┗ 📜mensaje.py
+-  ┃ ┣ 📂services
+-  ┃ ┃ ┗ 📜mysql_serv.py
 -  ┃ ┣ 📂utils
--  ┃ ┃ ┗ 📜logger.py                // Gestiona los logs del sistema, asi como la categorizacion de los mismos
--  ┃ ┣ 📜config.py                  // Configuracion de la aplicacion y sus endpoints. Estps son llamados del .env
--  ┃ ┣ 📜main.py                    // Cuerpo de la aplicacion. Inicio, gestion del listener, del healtcheck, y ruta principal  
--  ┃ ┣ 📜mqtt_listener.py           // Listener en segundo plano de las conexiones y topicos MQTT
+-  ┃ ┃ ┗ 📜logger.py
+-  ┃ ┣ 📜config.py
+-  ┃ ┣ 📜main.py
+-  ┃ ┣ 📜mqtt_listener.py
 -  ┃ ┗ 📜__init__.py
--  ┣ 📜.env                         // Documento de enviroment donde se definen los valores finales antes de desplegar
--  ┣ 📜docker-compose.yml           // Docke-compose para creacion y parametros del contenedor
--  ┣ 📜Dockerfile
--  ┣ 📜README.md
--  ┗ 📜requirements.txt             // Librerias/instalaciones que deben ejecutarse en la imagen del contenedor
+-  ┣ 📜.env
+-  ┣ 📜docker-compose.yml
+-  ┣ 📜Readme.md
+-  ┗ 📜requirements.txt
 
----
+### Despliegue
+La aplicacion se diseño para poder ser desplegada via docker dentro de cualquier entorno. Solo teniendo que modificar el archivo ".env"
+Este documento muestra de forma clara los enpoints, usuarios, contraseñas y variables mediante los cuales se establece las conexiones de la misma
 
-### Instacion solicitadas en el "requirements.txt"
-- fastapi
-    - Framework web asíncrono sobre el que montamos nuestros endpoints y el ciclo de vida de la app.
-- uvicorn[standard]
-    - Servidor ASGI ligero para ejecutar FastAPI, con extras ([standard]) como watchdog para recarga en caliente.
-- paho-mqtt
-    - Cliente MQTT para suscribirte a topics y procesar mensajes.
-- mysql-connector-python
-    - Driver oficial de Oracle para conectar a MySQL desde Python.
-- python-dotenv
-    - (Opcional si tu editor o entorno no carga .env automáticamente) permite que Pydantic BaseSettings lea tu .env.
-- sqlalchemy
-    - ORM/kit de conexión SQL que te facilitará abstraer consultas y gestión de sesiones en MySQL.
+A considerar que esta diseñada para recibir un formato concreto y especifico, parsearlo y devolver otro formato fijo.
+De queres reutilizar en otro proyecto se debera modificar los documentos de:
+- [mensaje.py](C%prototipo/API/app/models/mensaje.py)
+- [mysql_serv.py](C%prototipo/API/app/services/mysql_serv.py)
 
----
+Estos se encargan de identificar el formato del mensaje recibido y pasearlo; y de los queries para ingresar los datos en la base de datos correspondiente
 
-### Flujo de Datos
+-------------------------------------
 
-```mermaid
-flowchart LR
-  %% Dispositivo que envía mensajes al broker MQTT
-  Dispositivo[Dispositivo]
+### Para a quien le interese el codigo como tal:
 
-  %% MQTT subsystem
-  subgraph MQTT_Listener
-    direction TB
-    Broker[MQTT Broker]
-    Listener["MQTTListener
-(on_message)"]
-  end
+El **mqtt listener**. El cliente que funciona en segundo plano conectando con el/los topic configrados en el .env
+Se encarga de:
+- Conectar al broker MQTT
+- Suscribirse a los topics indicados en settings.mqtt_topics
+- Procesar cada mensaje y derivarlo al servicio adecuado. En esta caso a mysql_serv
 
-  %% Persistence services
-  subgraph Persistence
-    direction TB
-    MySQLService[MySQL Service]
-    MySQLDB[(MySQL DB)]
-  end
+[mqtt_listener.py](C%prototipo/Backend_API/app/mqtt_listener.py)
 
-  %% HTTP API
-  subgraph HTTP_API
-    direction TB
-    Client["API Client
-(e.g. dashboard)"]
-    FastAPI[FastAPI App]
-    Router[/api router/]
-    Health[/GET /health/]
-    Topics[/GET /api/topics/]
-    Messages[/GET /api/messages/]
-  end
+```py
+class MQTTListener:
+    #------------------------------------------
+    # CREACION DEL CLIENTE MQTT
+    #------------------------------------------
+    def __init__(self):
+        # Creamos el cliente MQTT
+        self.client = mqtt.Client()
+        # Si definimos que el broker requiere usuario/clave, descomentar:
+        if settings.mqtt_user and settings.mqtt_password:
+            self.client.username_pw_set(settings.mqtt_user, settings.mqtt_password)
+        self.client.on_connect = self._on_connect
+        self.client.on_message = self._on_message
 
-  %% Connections
-  Dispositivo --> Broker
-  Broker --> Listener
-  Listener -->|payload JSON| MySQLService
-  MySQLService --> MySQLDB
+    #------------------------------------------
+    # ARRAQUE DE CONEXION CON EL BROKER
+    #------------------------------------------
+    def start(self):
+        logger.info(f"Conectando a broker MQTT en {settings.mqtt_broker_url}...")
+        # Asumimos URL con puerto, ej: "mqtt://host:1883" -> extraemos host/puerto
+        url = settings.mqtt_broker_url.replace("mqtt://", "")
+        host, port = url.split(":")
+        self.client.connect(host, int(port))
+        # Levantamos el loop en background para no bloquear la app HTTP
+        threading.Thread(target=self.client.loop_forever, daemon=True).start()
+        logger.info("MQTT listener arrancado en background.")
 
-  Client --> FastAPI
-  FastAPI --> Health
-  FastAPI --> Router
-  Router --> Topics
-  Router --> Messages
-  Messages -->|consulta| MySQLService
+    #------------------------------------------
+    # ACCIONES AL CONECTAR (SUBSCRIPCION A TOPICS)
+    #------------------------------------------
+    def _on_connect(self, client, userdata, flags, rc):
+        if rc == 0:
+            logger.info("Conexión MQTT exitosa.")
+            # Nos suscribimos a cada topic, en caso de haber mas de uno
+            for topic in settings.mqtt_topics:
+                client.subscribe(topic)
+                logger.info(f"Suscrito al topic '{topic}'.")
+        else:
+            logger.error(f"Fallo al conectar MQTT, código de error: {rc}")
 
+    #------------------------------------------
+    # ACCIONES AL RECIBIR MENSAJE
+    #------------------------------------------
+    def _on_message(self, client, userdata, msg):
+        # Decodifica y parsea el JSON
+        try:
+            payload = msg.payload.decode("utf-8")
+            data = json.loads(payload)
+            logger.debug(f"Mensaje recibido en '{msg.topic}': {data}")
+        except Exception as e:
+            logger.error(f"Error parseando JSON en topic '{msg.topic}': {e}")
+            return
+
+        if any(msg.topic.startswith(t) for t in settings.mqtt_topics):
+            try:
+                # Validación del modelo de datos
+                mensaje = GatewayMessage.parse_obj(data)
+                # Guardado en ambos servicios
+                mysql_serv.save_device_info(mensaje)
+                logger.info("Guardado en MySQL e InfluxDB.")
+            except Exception as ex:
+                logger.error(f"Error guardando en servicios de BD: {ex}")
+        else:
+            logger.warning(f"Topic '{msg.topic}' no mapeado a ningún servicio.")
+
+
+#------------------------------------------
+# INTREGRACION EN MAIN.PY
+#------------------------------------------
+listener = MQTTListener()
 ```
 
+**Modelo del mensaje**, gestionado por el documento [mensaje.py](C%prototipo/Backend_API/app/models/mensaje.py)
+Este documento es el encargado de parsear el mensaje recibo. Esto implica, reconocerlo, identificar susparte, y separar/ordenarlo.
+Luego sera pasado al o lo serviios, engardos de tomar esa data y registrarla donde corresponda.
+
+```py
+#========================================
+# FORMATO DE LOS MENSAJES
+#========================================
+
+class SensorPayload(BaseModel):
+    ppm: float = Field(..., description="Concentración en ppm")
+    ratio: float = Field(..., description="Relación Rs/Ro")
+    raw: int = Field(..., description="Valor bruto ADC")
+    estado: str = Field(..., description="NORMAL o ALERTA")
+    umbral: float = Field(..., description="Umbral configurado")
+
+class ControlPayload(BaseModel):
+    automatico: bool = Field(..., description="Modo automático activado")
+    encendido: bool = Field(..., description="Extractor encendido")
+    transicion: bool = Field(..., description="En transición de velocidad")
+    velocidad: int = Field(..., description="Porcentaje de velocidad actual (0-100)")
+
+class GatewayMessage(BaseModel):
+    gatewayId: str = Field(..., description="Identificador del gateway")
+    timestamp: int = Field(..., description="Milisegundos desde arranque")
+    sensor: SensorPayload
+    control: ControlPayload
+    estadoVentilador: str = Field(..., description="String detallado de estado del ventilador")
+
+    class Config:
+        extra = "ignore"
+```
