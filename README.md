@@ -40,6 +40,24 @@ El desarrollo debe gestionarse en GitHub y documentarse en el propio repositorio
 
 ---------------------------
 
+### Links de Uso y Presentacion:
+
+El proyecto dispone de variedad de paneles de informacion, creados y gestionados via grafana, con los que se expone informacion la informacion recabada por nuestros dispositivos. 
+Permitiendo tener en tiempo real una vista del estado de los mismos, y del entorno que sensan. Dejamos a contiunacion una serie de links a cada uno de paneles de forma que puedan observar lo realizado, y tener una mirada del estado de nuestro proyecto
+
+**Dashboard [Grafana]**
+- [Mediciones de Gas](http://telecomunicaciones.ddns.net:8080/grafana/public-dashboards/5c6d33af6d3c4dd8b2dc677b6a31fec4)
+- [Metricas en Tiempo Real](http://telecomunicaciones.ddns.net:8080/grafana/public-dashboards/5c6d33af6d3c4dd8b2dc677b6a31fec4)
+- [Estado Sensores](http://telecomunicaciones.ddns.net:8080/grafana/public-dashboards/5c6d33af6d3c4dd8b2dc677b6a31fec4)
+
+<p align="center">
+  <img src="E%20assets/grafana1.png" alt="Imagen 1" width="250"/>
+  <img src="E%20assets/grafana2.png" alt="Imagen 2" width="250"/>
+  <img src="E%20assets/grafana3.png" alt="Imagen 3" width="250"/>
+</p>
+
+---------------------------
+
 ### 🔹 Selección del Proyecto  
 
 Sistema de detección y extracción de gases inflamables 🔥​​🚨​
@@ -134,7 +152,6 @@ A continuación, se detalla la planificación semanal del módulo, dividida en t
 **Repositorio Git con historial del trabajo**
 
 **Exposición y defensa del proyecto en equipo**
-
 
 -----------------------------
 
