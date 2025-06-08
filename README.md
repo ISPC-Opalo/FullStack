@@ -46,7 +46,7 @@ El proyecto dispone de variedad de paneles de informacion, creados y gestionados
 Permitiendo tener en tiempo real una vista del estado de los mismos, y del entorno que sensan. Dejamos a contiunacion una serie de links a cada uno de paneles de forma que puedan observar lo realizado, y tener una mirada del estado de nuestro proyecto
 
 **Dashboard [Grafana]**
-- [Mediciones de Gas](http://telecomunicaciones.ddns.net:8080/grafana/public-dashboards/5c6d33af6d3c4dd8b2dc677b6a31fec4)
+- [Mediciones de Gas](http://telecomunicaciones.ddns.net:8080/grafana/d/ef609433-b540-4f29-a893-d2fa1c493e10/fullstack-mediciongas?orgId=1&from=now-6h&to=now&timezone=America%2FArgentina%2FCordoba)
 - [Metricas en Tiempo Real](http://telecomunicaciones.ddns.net:8080/grafana/public-dashboards/5c6d33af6d3c4dd8b2dc677b6a31fec4)
 - [Estado Sensores](http://telecomunicaciones.ddns.net:8080/grafana/public-dashboards/5c6d33af6d3c4dd8b2dc677b6a31fec4)
 
