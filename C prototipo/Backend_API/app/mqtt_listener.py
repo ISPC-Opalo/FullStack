@@ -26,7 +26,7 @@ class MQTTListener:
         # Creamos el cliente MQTT
         self.client = mqtt.Client()
         #if settings.mqtt_user and settings.mqtt_password:
-        #   self.client.username_pw_set(settings.mqtt_user, settings.mqtt_password)
+        self.client.username_pw_set(settings.mqtt_user, settings.mqtt_password)
         self.client.on_connect = self._on_connect
         self.client.on_message = self._on_message
 

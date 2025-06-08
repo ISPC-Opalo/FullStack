@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime
 import sqlalchemy as sa
-from sqlalchemy import Table, MetaData, Column, Integer, String, Float, Boolean, BigInteger, Text, ForeignKey, select
+from sqlalchemy import Table, MetaData, Column, Integer, String, Float, Boolean, Text, ForeignKey, select, DateTime
 from sqlalchemy.exc import OperationalError
 from app.utils.logger import get_logger
 from app.models.mensaje import GatewayMessage
@@ -55,7 +55,7 @@ _medicion_table = Table(
     Column("vel_actual", Integer, nullable=False),
     Column("vel_objetivo", Integer, nullable=False),
     Column("transicion", Boolean, nullable=False),
-    Column("timestamp", BigInteger, nullable=False),
+    Column("timestamp", DateTime, nullable=False),
 )
 
 _actuador_table = Table(
@@ -108,6 +108,12 @@ def guardarDatos(msg: GatewayMessage) -> None:
 
             # 3) Medición
             control = msg.control
+            try:
+                ts_datetime = datetime.strptime(msg.timestamp, "%d/%m/%Y %H:%M:%S")
+            except ValueError as ve:
+                logger.error(f"Formato de timestamp inválido: {msg.timestamp}")
+                raise ve
+
             res_m = conn.execute(
                 sa.insert(_medicion_table).values(
                     dispositivo_id=dispositivo_id,
@@ -116,7 +122,7 @@ def guardarDatos(msg: GatewayMessage) -> None:
                     vel_actual=control.velocidad,
                     vel_objetivo=control.velocidad,
                     transicion=control.transicion,
-                    timestamp=msg.timestamp,
+                    timestamp=ts_datetime, 
                 )
             )
             medicion_id = res_m.inserted_primary_key[0]
