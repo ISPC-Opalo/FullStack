@@ -47,8 +47,8 @@ Permitiendo tener en tiempo real una vista del estado de los mismos, y del entor
 
 **Dashboard [Grafana]**
 - [Mediciones de Gas](http://telecomunicaciones.ddns.net:8080/grafana/d/ef609433-b540-4f29-a893-d2fa1c493e10/fullstack-mediciongas?orgId=1&from=now-6h&to=now&timezone=America%2FArgentina%2FCordoba)
-- [Metricas en Tiempo Real](http://telecomunicaciones.ddns.net:8080/grafana/public-dashboards/5c6d33af6d3c4dd8b2dc677b6a31fec4)
-- [Estado Sensores](http://telecomunicaciones.ddns.net:8080/grafana/public-dashboards/5c6d33af6d3c4dd8b2dc677b6a31fec4)
+- [Metricas en Tiempo Real](http://telecomunicaciones.ddns.net:8080/grafana/d/3819f65d-1b7a-4cc0-8a9d-af1edef21fd5/rt-metrics?orgId=1&from=now-12h&to=now&timezone=America%2FArgentina%2FCordoba&refresh=auto)
+
 
 <p align="center">
   <img src="E%20assets/grafana1.png" alt="Imagen 1" width="400"/>
