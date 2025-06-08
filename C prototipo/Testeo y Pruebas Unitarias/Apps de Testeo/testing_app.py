@@ -2,13 +2,15 @@ import random
 import time
 import json
 import paho.mqtt.client as mqtt
+from datetime import datetime
+
 
 # ——— CONFIGURACIÓN —————————————————————————————————————————————
 BROKER   = 'test.mosquitto.org'     
 PORT     = 1883                     
 TOPIC    = 'gas/datos'
 
-INTERVAL_SECONDS   = 30
+INTERVAL_SECONDS   = 60
 
 GATEWAYS = [
     'esp32-central-001',
@@ -23,59 +25,53 @@ MIN_RAW, MAX_RAW       = 0,     1023
 UMBRAL                 = 500.0
 MIN_VEL, MAX_VEL       = 0,     100
 PWM_MAX                = 127
-
+MIN_VOBJ, MAX_VOBJ     = 70, 100
 # ————————————————————————————————————————————————————————————————
 
+
 def generate_payload() -> str:
-    """Construye y devuelve el JSON listo para publicar."""
     gateway     = random.choice(GATEWAYS)
-    # Si quisieras simular millis() desde arranque:
-    timestamp   = int(time.monotonic() * 1000)
+    timestamp   = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     ppm         = round(random.uniform(MIN_PPM, MAX_PPM), 1)
     ratio       = round(random.uniform(MIN_RATIO, MAX_RATIO), 2)
     raw         = random.randint(MIN_RAW, MAX_RAW)
     estado      = "ALERTA" if ppm > UMBRAL else "NORMAL"
     automatico  = random.choice([True, False])
     encendido   = random.choice([True, False])
-    transicion  = False
+    transicion  = random.choice([True, False])
     velocidad   = random.randint(MIN_VEL, MAX_VEL)
     pwm_value   = int(velocidad / 100 * PWM_MAX)
-    estadoVent  = (
-        f"Pin:27,Velocidad:{velocidad}%"
-        f",Objetivo:{velocidad}%"
-        f",Encendido:{'SI' if encendido else 'NO'}"
-        f",Transicion:{'SI' if transicion else 'NO'}"
-        f",PWM:{pwm_value}"
+    v_objetivo  = random.randint(MIN_VOBJ, MAX_VOBJ)
+    pin         = 27
+
+    estadoVentilador_str = (
+        f"Pin:{pin},"
+        f"Velocidad:{velocidad}%,"
+        f"Objetivo:{v_objetivo}%,"
+        f"Encendido:{'SI' if encendido else 'NO'},"
+        f"Transicion:{'SI' if transicion else 'NO'},"
+        f"PWM:{pwm_value}"
     )
 
     payload = {
-      "gatewayId": gateway,
-      "timestamp": timestamp,
-      "sensor": {
-        "ppm": ppm,
-        "ratio": ratio,
-        "raw": raw,
-        "estado": estado,
-        "umbral": UMBRAL
-      },
-      "control": {
-        "automatico": automatico,
-        "encendido": encendido,
-        "transicion": transicion,
-        "velocidad": velocidad
-      },
-      "estadoVentilador": estadoVent
+        "gatewayId": gateway,
+        "timestamp": timestamp,
+        "sensor": {
+            "ppm": ppm,
+            "ratio": ratio,
+            "raw": raw,
+            "estado": estado,
+            "umbral": UMBRAL
+        },
+        "control": {
+            "automatico": automatico,
+            "encendido": encendido,
+            "transicion": transicion,
+            "velocidad": velocidad
+        },
+        "estadoVentilador": estadoVentilador_str
     }
     return json.dumps(payload)
-
-def main():
-    client = mqtt.Client(protocol=mqtt.MQTTv5)
-    client.connect(BROKER, PORT, keepalive=60)
-    payload = generate_payload()
-    client.publish(TOPIC, payload)
-    print(f"\nPublicado en mqtt://{BROKER}:{PORT}/{TOPIC}:\n")
-    print(payload, "\n")
-    client.disconnect()
 
 def publish_once():
     client = mqtt.Client(protocol=mqtt.MQTTv5)
@@ -92,7 +88,6 @@ if __name__ == "__main__":
             try:
                 publish_once()
             except Exception as err:
-                # Si falla la publicación, lo anotamos pero seguimos en el bucle
                 print(f"ERROR al publicar: {err}")
             time.sleep(INTERVAL_SECONDS)
     except KeyboardInterrupt:
@@ -103,7 +98,7 @@ if __name__ == "__main__":
 
 # {
 #   "gatewayId": "esp32-central-001",
-#   "timestamp": 12345678,        // millis() desde arranque
+#   "timestamp": 2023-10-01 12:34:56,
 #   "sensor": {
 #     "ppm": 18.0,
 #     "ratio": 1.23,
