@@ -1,11 +1,12 @@
 from typing import Optional
 from datetime import datetime
 import sqlalchemy as sa
-from sqlalchemy import Table, MetaData, Column, Integer, String, Float, Boolean, BigInteger, Text, ForeignKey, select
+from sqlalchemy import Table, MetaData, Column, Integer, String, Float, Boolean, Text, ForeignKey, select, DateTime
 from sqlalchemy.exc import OperationalError
 from app.utils.logger import get_logger
 from app.models.mensaje import GatewayMessage
 from app.config import settings
+
 
 logger = get_logger("mariadb_service")
 
@@ -55,7 +56,7 @@ _medicion_table = Table(
     Column("vel_actual", Integer, nullable=False),
     Column("vel_objetivo", Integer, nullable=False),
     Column("transicion", Boolean, nullable=False),
-    Column("timestamp", BigInteger, nullable=False),
+    Column("timestamp", DateTime, nullable=False),
 )
 
 _actuador_table = Table(
@@ -63,7 +64,12 @@ _actuador_table = Table(
     _metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("medicion_id", Integer, ForeignKey("medicion.medicion_id"), nullable=False),
-    Column("estado_vent", Text, nullable=False),
+    Column("pin", Integer, nullable=False),
+    Column("velocidad", Integer, nullable=False),
+    Column("objetivo", Integer, nullable=False),
+    Column("encendido", Boolean, nullable=False),
+    Column("transicion", Boolean, nullable=False),
+    Column("pwm_max", Integer, nullable=False),
     Column("nombre", String(50)),
 )
 
@@ -108,26 +114,32 @@ def guardarDatos(msg: GatewayMessage) -> None:
 
             # 3) Medición
             control = msg.control
+            ts_datetime = msg.timestamp
             res_m = conn.execute(
                 sa.insert(_medicion_table).values(
                     dispositivo_id=dispositivo_id,
                     auto=control.automatico,
                     encendido=control.encendido,
                     vel_actual=control.velocidad,
-                    vel_objetivo=control.velocidad,
+                    vel_objetivo=msg.actuador.objetivo,
                     transicion=control.transicion,
-                    timestamp=msg.timestamp,
+                    timestamp=ts_datetime,
                 )
             )
             medicion_id = res_m.inserted_primary_key[0]
             logger.debug(f"Medición insertada con ID {medicion_id}")
 
             # 4) Actuador
+            actuador = msg.actuador
             conn.execute(
                 sa.insert(_actuador_table).values(
                     medicion_id=medicion_id,
-                    estado_vent=msg.estadoVentilador,
-                    nombre="ventilador",
+                    pin=actuador.pin,
+                    velocidad=actuador.velocidad,
+                    objetivo=actuador.objetivo,
+                    encendido=actuador.encendido,
+                    transicion=actuador.transicion,
+                    nombre="ventilador"
                 )
             )
             logger.debug("Registro de actuador insertado")
@@ -137,3 +149,4 @@ def guardarDatos(msg: GatewayMessage) -> None:
         logger.error(f"OperationalError al acceder a MariaDB: {oe}")
     except Exception as e:
         logger.error(f"Error inesperado al guardar datos en MariaDB: {e}")
+

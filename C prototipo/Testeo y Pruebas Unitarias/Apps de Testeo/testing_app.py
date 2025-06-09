@@ -4,8 +4,8 @@ import json
 import paho.mqtt.client as mqtt
 
 # ——— CONFIGURACIÓN —————————————————————————————————————————————
-BROKER   = 'test.mosquitto.org'     
-PORT     = 1883                     
+BROKER   = 'telecomunicaciones.ddns.net'     
+PORT     = 2480
 TOPIC    = 'gas/datos'
 
 INTERVAL_SECONDS   = 30
@@ -79,6 +79,7 @@ def main():
 
 def publish_once():
     client = mqtt.Client(protocol=mqtt.MQTTv5)
+    client.username_pw_set("telecomunicaciones", "cohorte*2024")
     client.connect(BROKER, PORT, keepalive=60)
     payload = generate_payload()
     client.publish(TOPIC, payload)

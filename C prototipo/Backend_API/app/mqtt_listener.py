@@ -1,6 +1,7 @@
 import json
 import threading
 import paho.mqtt.client as mqtt
+from datetime import datetime
 from app.config import settings
 from app.utils.logger import get_logger
 from app.services import mariadb_serv
@@ -23,10 +24,9 @@ class MQTTListener:
     # CREACION DEL CLIENTE MQTT
     #------------------------------------------
     def __init__(self):
-        # Creamos el cliente MQTT
         self.client = mqtt.Client()
-        #if settings.mqtt_user and settings.mqtt_password:
-        #   self.client.username_pw_set(settings.mqtt_user, settings.mqtt_password)
+        if settings.mqtt_user and settings.mqtt_password:
+            self.client.username_pw_set(settings.mqtt_user, settings.mqtt_password)
         self.client.on_connect = self._on_connect
         self.client.on_message = self._on_message
 
@@ -34,13 +34,10 @@ class MQTTListener:
     # ARRAQUE DE CONEXION CON EL BROKER
     #------------------------------------------
     def start(self):
-        logger.info(f"Conectando a broker MQTT en {settings.mqtt_broker_url}...")
-
+        logger.info(f"Conectando a broker MQTT en {settings.mqtt_broker_url}.")
         url = settings.mqtt_broker_url.replace("mqtt://", "")
         host, port = url.split(":")
         self.client.connect(host, int(port))
-
-        # Se levanta el loop en background para no bloquear la app HTTP
         threading.Thread(target=self.client.loop_forever, daemon=True).start()
         logger.info("MQTT listener arrancado en background.")
 
@@ -50,8 +47,6 @@ class MQTTListener:
     def _on_connect(self, client, userdata, flags, rc):
         if rc == 0:
             logger.info("Conexión MQTT exitosa.")
-
-            # Nos suscribimos a cada topic, en caso de haber mas de uno
             for topic in settings.mqtt_topics:
                 client.subscribe(topic)
                 logger.info(f"Suscrito al topic '{topic}'.")
@@ -62,27 +57,20 @@ class MQTTListener:
     # ACCIONES AL RECIBIR MENSAJE
     #------------------------------------------
     def _on_message(self, client, userdata, msg):
-        # Decodifica y parsea el JSON
         try:
-            payload = msg.payload.decode("utf-8")
-            data = json.loads(payload)
-            logger.info(f"Mensaje recibido en '{msg.topic}': {data}")
-        except Exception as e:
-            logger.error(f"Error parseando JSON en topic '{msg.topic}': {e}")
-            return
+            payload = msg.payload.decode("utf-8").strip()
+            # Eliminamos posibles comas finales que invalidan el JSON
+            if payload.endswith(",}"):
+                payload = payload.replace(",}", "}")
+            raw_data = json.loads(payload)
+            logger.info(f"Mensaje recibido en '{msg.topic}': {raw_data}")
 
-        if any(msg.topic.startswith(t) for t in settings.mqtt_topics):
-            try:
-                # Validación del modelo de datos
-                mensaje = GatewayMessage.parse_obj(data)
-                logger.info(f"GatewayMessage parseado: {mensaje}")
-                # Guardado en ambos MariaDB
-                mariadb_serv.guardarDatos(mensaje)
-                logger.info("Guardado en MariaDB.")
-            except Exception as ex:
-                logger.error(f"Error guardando en servicios de BD: {ex}")
-        else:
-            logger.warning(f"Topic '{msg.topic}' no mapeado a ningún servicio.")
+            mensaje = GatewayMessage.parse_obj(raw_data)
+            mariadb_serv.guardarDatos(mensaje)
+            logger.info("Guardado en MariaDB.")
+        except Exception as e:
+            logger.error(f"Error procesando mensaje de topic '{msg.topic}': {e}")
+
 
 
 #------------------------------------------
