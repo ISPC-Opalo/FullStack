@@ -1,43 +1,46 @@
+from pydantic import BaseModel, validator
+from typing import Literal
 from datetime import datetime
-from typing import List, Optional
-from pydantic import BaseModel, Field, validator
-from dateutil import parser
-from dateutil.parser import ParserError
-from typing import Union
 
-
-#========================================
-# FORMATO DE LOS MENSAJES
-#========================================
 
 class SensorPayload(BaseModel):
-    ppm: float = Field(..., description="Concentración en ppm")
-    ratio: float = Field(..., description="Relación Rs/Ro")
-    raw: int = Field(..., description="Valor bruto ADC")
-    estado: str = Field(..., description="NORMAL o ALERTA")
-    umbral: float = Field(..., description="Umbral configurado")
+    ppm: float
+    ratio: float
+    raw: int
+    estado: Literal["NORMAL", "ALERTA"]
+    umbral: float
+
 
 class ControlPayload(BaseModel):
-    automatico: bool = Field(..., description="Modo automático activado")
-    encendido: bool = Field(..., description="Extractor encendido")
-    transicion: bool = Field(..., description="En transición de velocidad")
-    velocidad: int = Field(..., description="Porcentaje de velocidad actual (0-100)")
-    
+    automatico: bool
+    encendido: bool
+    transicion: bool
+    velocidad: int
+
+
+class ActuadorPayload(BaseModel):
+    pin: int
+    velocidad: int
+    objetivo: int
+    pwm_max: int
+    encendido: bool
+    transicion: bool
+
+
 class GatewayMessage(BaseModel):
     gatewayId: str
-    timestamp: str  # ← ahora esperamos un string tipo "08/06/2025 16:30:44"
+    timestamp: datetime
     sensor: SensorPayload
     control: ControlPayload
-    estadoVentilador: str
+    actuador: ActuadorPayload
 
     @validator("timestamp", pre=True)
-    def validar_formato_timestamp(cls, v):
-        try:
-            # Validamos formato, pero no lo convertimos
-            datetime.strptime(v, "%d/%m/%Y %H:%M:%S")
-            return v
-        except ValueError:
-            raise ValueError("El timestamp debe estar en formato DD/MM/YYYY HH:MM:SS")
+    def parse_timestamp(cls, v):
+        # Parseamos cadenas en formato dd/mm/YYYY HH:MM:SS
+        if isinstance(v, str):
+            return datetime.strptime(v, "%d/%m/%Y %H:%M:%S")
+        return v
+
 
 # ========================================
 # EJEMPLO DE USO:
