@@ -12,8 +12,8 @@ En Grafana se crearon **paneles personalizados** para:
 
 Esta visualización facilita la interpretación de los datos, la detección temprana de condiciones peligrosas y el control eficiente del sistema.
 
-<img src="asset/img1.png" alt="Aplicación" width="300" height="600">
+<img src="asset/img1.png" alt="Aplicación" width="700" height="300">
 
-<img src="asset/img2.png" alt="Aplicación" width="300" height="600">
+<img src="asset/img2.png" alt="Aplicación" width="700" height="300">
 
-<img src="asset/img3.png" alt="Aplicación" width="300" height="600">
+<img src="asset/img3.png" alt="Aplicación" width="700" height="300">
