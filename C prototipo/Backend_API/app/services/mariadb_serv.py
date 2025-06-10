@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime
 import sqlalchemy as sa
-from sqlalchemy import Table, MetaData, Column, Integer, String, Float, Boolean, BigInteger, Text, ForeignKey, select
+from sqlalchemy import Table, MetaData, Column, Integer, String, Float, Boolean, DateTime, ForeignKey, select
 from sqlalchemy.exc import OperationalError
 from app.utils.logger import get_logger
 from app.models.mensaje import GatewayMessage
@@ -22,7 +22,7 @@ _engine = sa.create_engine(
 _metadata = MetaData()
 
 #========================================
-# Definición de tablas según nuevo esquema
+# Definición de tablas según el esquema
 #========================================
 _dispositivo_table = Table(
     "dispositivo",
@@ -55,7 +55,7 @@ _medicion_table = Table(
     Column("vel_actual", Integer, nullable=False),
     Column("vel_objetivo", Integer, nullable=False),
     Column("transicion", Boolean, nullable=False),
-    Column("timestamp", BigInteger, nullable=False),
+    Column("timestamp", DateTime, nullable=False),
 )
 
 _actuador_table = Table(
@@ -63,12 +63,52 @@ _actuador_table = Table(
     _metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("medicion_id", Integer, ForeignKey("medicion.medicion_id"), nullable=False),
-    Column("estado_vent", Text, nullable=False),
-    Column("nombre", String(50)),
+    Column("pin", Integer, nullable=False),
+    Column("velocidad", Integer, nullable=False),
+    Column("objetivo", Integer, nullable=False),
+    Column("encendido", String(2), nullable=False),   # 'SI' o 'NO'
+    Column("transicion", String(2), nullable=False),  # 'SI' o 'NO'
+    Column("pwm", Integer, nullable=False),
+    Column("nombre", String(50), nullable=False),
 )
 
 # Crear tablas si no existen
 _metadata.create_all(_engine)
+
+
+#========================================
+# Helper para parsear "estadoVentilador"
+#========================================
+def parse_estado_ventilador(raw: str) -> dict:
+    """
+    Espera un string con formato:
+        "Pin:27,Velocidad:1%,Objetivo:77%,Encendido:NO,Transicion:NO,PWM:1"
+    Devuelve un diccionario con claves:
+        pin (int), velocidad (int), objetivo (int),
+        encendido (str), transicion (str), pwm (int).
+    """
+    partes = raw.split(",")
+    campos = {}
+    for parte in partes:
+        clave, valor = parte.split(":", 1)
+        clave = clave.strip().lower()          # ej. "pin", "velocidad", etc.
+        valor = valor.strip()
+        campos[clave] = valor
+
+    try:
+        return {
+            "pin": int(campos["pin"]),
+            "velocidad": int(campos["velocidad"].rstrip("%")),
+            "objetivo": int(campos["objetivo"].rstrip("%")),
+            "encendido": campos["encendido"],      # asumimos "SI" o "NO"
+            "transicion": campos["transicion"],    # asumimos "SI" o "NO"
+            "pwm": int(campos["pwm"])
+        }
+    except KeyError as ke:
+        raise ValueError(f"Falta campo en estadoVentilador: {ke}") from ke
+    except ValueError:
+        raise ValueError(f"Formato inválido en estadoVentilador: '{raw}'")
+
 
 #========================================
 # Función que registra info en MariaDB con manejo de errores y logs
@@ -122,15 +162,21 @@ def guardarDatos(msg: GatewayMessage) -> None:
             medicion_id = res_m.inserted_primary_key[0]
             logger.debug(f"Medición insertada con ID {medicion_id}")
 
-            # 4) Actuador
+            # 4) Actuador (parseando estadoVentilador)
+            datos_act = parse_estado_ventilador(msg.estadoVentilador)
             conn.execute(
                 sa.insert(_actuador_table).values(
                     medicion_id=medicion_id,
-                    estado_vent=msg.estadoVentilador,
+                    pin=datos_act["pin"],
+                    velocidad=datos_act["velocidad"],
+                    objetivo=datos_act["objetivo"],
+                    encendido=datos_act["encendido"],
+                    transicion=datos_act["transicion"],
+                    pwm=datos_act["pwm"],
                     nombre="ventilador",
                 )
             )
-            logger.debug("Registro de actuador insertado")
+            logger.debug("Registro de actuador insertado con parsing de estadoVentilador")
 
         logger.info("Datos registrados correctamente en MariaDB.")
     except OperationalError as oe:

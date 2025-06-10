@@ -23,13 +23,25 @@ class ControlPayload(BaseModel):
 
 class GatewayMessage(BaseModel):
     gatewayId: str = Field(..., description="Identificador del gateway")
-    timestamp: int = Field(..., description="Milisegundos desde arranque")
+    timestamp: datetime = Field(..., description="Fecha y hora del mensaje (YYYY-MM-DD HH:MM:SS)")
     sensor: SensorPayload
     control: ControlPayload
     estadoVentilador: str = Field(..., description="String detallado de estado del ventilador")
 
     class Config:
         extra = "ignore"
+
+    @validator("timestamp", pre=True)
+    def parse_timestamp(cls, v):
+        """
+        Espera una cadena como '2023-10-01 12:34:56' y la convierte a datetime.
+        """
+        if isinstance(v, datetime):
+            return v
+        try:
+            return parser.parse(v)
+        except ParserError as e:
+            raise ValueError(f"timestamp inválido: {v}") from e
 
 # ========================================
 # EJEMPLO DE USO:
