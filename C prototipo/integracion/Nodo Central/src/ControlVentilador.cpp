@@ -6,6 +6,7 @@ ControlVentilador::ControlVentilador(int pin, int velocidadMin) {
   velocidadActual = 0;
   velocidadObjetivo = 0;
   velocidadMinima = velocidadMin;
+  pwmMaximo = 255;  // Valor por defecto
   incrementoVelocidad = 5;
   intervaloTransicion = 50; // 50ms entre cambios
   tiempoAnterior = 0;
@@ -26,13 +27,13 @@ void ControlVentilador::establecerVelocidad(int porcentaje) {
   // Validar rango
   porcentaje = constrain(porcentaje, 0, 100);
   
-  // Convertir porcentaje a valor PWM (0-255)
+  // Convertir porcentaje a valor PWM (0-pwmMaximo)
   if (porcentaje == 0) {
     velocidadObjetivo = 0;
     ventiladorEncendido = false;
   } else {
     // Aplicar velocidad mínima si está habilitada
-    int valorPWM = map(porcentaje, 0, 100, 0, 255);
+    int valorPWM = map(porcentaje, 0, 100, 0, pwmMaximo);
     if (arranqueSuave && valorPWM > 0 && valorPWM < velocidadMinima) {
       valorPWM = velocidadMinima;
     }
@@ -41,7 +42,7 @@ void ControlVentilador::establecerVelocidad(int porcentaje) {
   }
   
   transicionActiva = true;
-  Serial.println("Nueva velocidad objetivo: " + String(porcentaje) + "% (PWM: " + String(velocidadObjetivo) + ")");
+  Serial.println("Nueva velocidad objetivo: " + String(porcentaje) + "% (PWM: " + String(velocidadObjetivo) + "/" + String(pwmMaximo) + ")");
 }
 
 // Encender ventilador con velocidad específica
@@ -73,12 +74,12 @@ void ControlVentilador::actualizar() {
       analogWrite(pinPWM, velocidadActual);
       
       // Debug info
-      Serial.println("Velocidad actual: " + String(map(velocidadActual, 0, 255, 0, 100)) + "% (PWM: " + String(velocidadActual) + ")");
+      Serial.println("Velocidad actual: " + String(map(velocidadActual, 0, pwmMaximo, 0, 100)) + "% (PWM: " + String(velocidadActual) + "/" + String(pwmMaximo) + ")");
       
     } else {
       // Transición completada
       transicionActiva = false;
-      Serial.println("Transición completada - Velocidad final: " + String(map(velocidadActual, 0, 255, 0, 100)) + "%");
+      Serial.println("Transición completada - Velocidad final: " + String(map(velocidadActual, 0, pwmMaximo, 0, 100)) + "%");
     }
     
     tiempoAnterior = tiempoActual;
@@ -97,13 +98,39 @@ void ControlVentilador::configurarArranqueSuave(bool habilitado, int velocidadMi
   velocidadMinima = constrain(velocidadMin, 50, 200);
 }
 
+// NUEVAS FUNCIONES
+// Establecer PWM máximo
+void ControlVentilador::setPwmMax(int pwmMax) {
+  pwmMaximo = constrain(pwmMax, 100, 255);
+  Serial.println("PWM máximo establecido en: " + String(pwmMaximo));
+  
+  // Si la velocidad actual excede el nuevo máximo, ajustarla
+  if (velocidadActual > pwmMaximo) {
+    velocidadActual = pwmMaximo;
+    analogWrite(pinPWM, velocidadActual);
+  }
+  if (velocidadObjetivo > pwmMaximo) {
+    velocidadObjetivo = pwmMaximo;
+  }
+}
+
+// Establecer velocidad objetivo directamente (alias para establecerVelocidad)
+void ControlVentilador::setObjetivo(int porcentaje) {
+  establecerVelocidad(porcentaje);
+}
+
+// Obtener PWM máximo actual
+int ControlVentilador::obtenerPwmMax() {
+  return pwmMaximo;
+}
+
 // Getters para monitoreo
 int ControlVentilador::obtenerVelocidadActual() {
-  return map(velocidadActual, 0, 255, 0, 100);
+  return map(velocidadActual, 0, pwmMaximo, 0, 100);
 }
 
 int ControlVentilador::obtenerVelocidadObjetivo() {
-  return map(velocidadObjetivo, 0, 255, 0, 100);
+  return map(velocidadObjetivo, 0, pwmMaximo, 0, 100);
 }
 
 bool ControlVentilador::estaEncendido() {
@@ -129,8 +156,10 @@ String ControlVentilador::obtenerEstadoCompleto() {
   String estado = "Pin:" + String(pinPWM) + 
                   ",Velocidad:" + String(obtenerVelocidadActual()) + "%" +
                   ",Objetivo:" + String(obtenerVelocidadObjetivo()) + "%" +
+                  ",PWMMax:" + String(pwmMaximo) +
                   ",Encendido:" + (estaEncendido() ? "SI" : "NO") +
                   ",Transicion:" + (estaEnTransicion() ? "SI" : "NO") +
                   ",PWM:" + String(velocidadActual);
+                
   return estado;
 }

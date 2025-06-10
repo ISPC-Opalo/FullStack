@@ -4,46 +4,52 @@
 #include <Arduino.h>
 
 class ControlVentilador {
-private:
-  int pinPWM;
-  int velocidadActual;        // Velocidad actual (0-255)
-  int velocidadObjetivo;      // Velocidad objetivo (0-255)
-  int incrementoVelocidad;    // Incremento por step
-  unsigned long tiempoAnterior;
-  unsigned long intervaloTransicion; // Tiempo entre cambios graduales
-  bool transicionActiva;
-  bool ventiladorEncendido;
-  
-  // Variables para control de arranque suave
-  bool arranqueSuave;
-  int velocidadMinima;        // Velocidad mínima para arranque
-  
-public:
-  // Constructor
-  ControlVentilador(int pin, int velocidadMin = 100);
-  
-  // Métodos principales
-  void inicializar();
-  void establecerVelocidad(int porcentaje);
-  void encender(int porcentaje = 50);
-  void apagar();
-  void actualizar();
-  
-  // Configuración
-  void configurarTransicion(int incremento, unsigned long intervalo);
-  void configurarArranqueSuave(bool habilitado, int velocidadMin = 100);
-  
-  // Getters para monitoreo
-  int obtenerVelocidadActual();
-  int obtenerVelocidadObjetivo();
-  bool estaEncendido();
-  bool estaEnTransicion();
-  
-  // Parada de emergencia
-  void paradaEmergencia();
-  
-  // Obtener estado completo del ventilador
-  String obtenerEstadoCompleto();
+  private:
+    // Pines y control PWM
+    int pinPWM;
+    int velocidadActual;      // Valor PWM actual (0-255)
+    int velocidadObjetivo;    // Valor PWM objetivo (0-255)
+    int velocidadMinima;      // PWM mínimo para arranque
+    int pwmMaximo;           // PWM máximo permitido (0-255)
+    
+    // Control de transición suave
+    int incrementoVelocidad;
+    unsigned long intervaloTransicion;
+    unsigned long tiempoAnterior;
+    bool transicionActiva;
+    
+    // Estado del ventilador
+    bool ventiladorEncendido;
+    bool arranqueSuave;
+    
+  public:
+    // Constructor
+    ControlVentilador(int pin, int velocidadMin = 100);
+    
+    // Funciones principales
+    void inicializar();
+    void establecerVelocidad(int porcentaje);
+    void encender(int porcentaje = 50);
+    void apagar();
+    void actualizar();
+    
+    // Configuración
+    void configurarTransicion(int incremento, unsigned long intervalo);
+    void configurarArranqueSuave(bool habilitado, int velocidadMin = 100);
+    void setPwmMax(int pwmMax);              // Nueva función
+    void setObjetivo(int porcentaje);        // Nueva función
+    
+    // Getters
+    int pinPWM_;
+    int obtenerVelocidadActual();
+    int obtenerVelocidadObjetivo();
+    int obtenerPwmMax();                     // Nueva función
+    bool estaEncendido();
+    bool estaEnTransicion();
+    String obtenerEstadoCompleto();
+    
+    // Emergencia
+    void paradaEmergencia();
 };
 
 #endif
