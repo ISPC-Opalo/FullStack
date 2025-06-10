@@ -3,7 +3,7 @@
 #include <LoRa.h>
 
 //=======================================
-// PINES LoRa para Arduino Nano (IGUAL QUE ARDUINO UNO QUE FUNCIONA)
+// PINES LoRa para Arduino Uno 
 //=======================================
 #define PIN_SS    10   // NSS
 #define PIN_RST   9    // Reset
@@ -185,16 +185,16 @@ void readAndSendGasData() {
 }
 
 void sendLoRaMessage(String message) {
-  Serial.print(F("📤 Enviando: "));
+  Serial.print(F("Enviando: "));
   Serial.println(message);
   
   LoRa.beginPacket();
   LoRa.print(message);
   
   if (LoRa.endPacket()) {
-    Serial.println(F("✅ Enviado OK"));
+    Serial.println(F("Enviado OK"));
   } else {
-    Serial.println(F("❌ Error envío"));
+    Serial.println(F("Error envío"));
   }
 }
 
@@ -209,9 +209,9 @@ void checkIncomingMessages() {
     }
     
     // Mostrar información como en el receptor que funciona
-    Serial.println("📥 MENSAJE: " + receivedMsg);
-    Serial.println("📶 RSSI: " + String(LoRa.packetRssi()) + " dBm");
-    Serial.println("📊 SNR: " + String(LoRa.packetSnr()) + " dB");
+    Serial.println("MENSAJE: " + receivedMsg);
+    Serial.println("RSSI: " + String(LoRa.packetRssi()) + " dBm");
+    Serial.println("SNR: " + String(LoRa.packetSnr()) + " dB");
     Serial.println("───────────────────────────");
     
     processMessage(receivedMsg);
@@ -269,7 +269,7 @@ void processMessage(String message) {
     sendLoRaMessage(F("RESET_ACK"));
     delay(1000);
   
-    asm volatile ("  jmp 0");  // Reset por software
+    asm volatile ("  jmp 0");  
     
   } else {
     Serial.print(F("Comando no reconocido: "));
