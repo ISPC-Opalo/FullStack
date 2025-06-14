@@ -23,9 +23,7 @@
 ### Índice
 
 
-| [![Demostracion del uso automatico](E%20assets\Demostracion_uso.png)](https://youtube.com/shorts/zFDpbnvFVWU?feature=share) | [![Demostracion del uso manual](E%20assets\Demostracion_uso.png)](https://youtube.com/shorts/pIPmyRFcj_Q?feature=share)|
-
-
+ | [![Demostracion del uso automatico](/E%20assets/Demostracion_uso.png)](https://youtube.com/shorts/zFDpbnvFVWU?feature=share) | [![Demostracion del uso manual](/E%20assets/Demostracion_uso.png)](https://youtube.com/shorts/pIPmyRFcj_Q?feature=share) |
 
 ---------------------------
 ### Estructura del Repositorio
